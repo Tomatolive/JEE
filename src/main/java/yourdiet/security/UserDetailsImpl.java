@@ -10,14 +10,16 @@ import java.util.Collections;
 import java.util.List;
 
 public class UserDetailsImpl implements UserDetails {
-    private String username;
-    private String password;
-    private List<SimpleGrantedAuthority> authorities;
+    private final User user;
+    private final List<SimpleGrantedAuthority> authorities;
 
     public UserDetailsImpl(User user) {
-        this.username = user.getUsername();
-        this.password = user.getPassword();
+        this.user = user;
         this.authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @Override
@@ -27,12 +29,12 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return user.getUsername();
     }
 
     @Override
