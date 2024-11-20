@@ -59,11 +59,13 @@
       <ul class="navbar-nav">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Profile
+            <span th:text="${user.username}">Utilisateur</span>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-            <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li>
-            <li><a class="dropdown-item" th:href="@{/settings}">Settings</a></li>
+            <li><a class="dropdown-item" th:href="@{/profil}">Profil</a></li>
+            <li><a class="dropdown-item" th:href="@{/parametres}">Paramètres</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" th:href="@{/logout}">Déconnexion</a></li>
           </ul>
         </li>
       </ul>
