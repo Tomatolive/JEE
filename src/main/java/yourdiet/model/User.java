@@ -28,4 +28,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<FoodEntry> foodEntries = new ArrayList<>();
+    public String getUsername() {
+        return username;
+    }
 }

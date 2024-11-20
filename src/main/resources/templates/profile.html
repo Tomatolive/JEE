@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Récapitulatif Profil - Suivi de Régime</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    .container {
+      width: 80%;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #4CAF50;
+    }
+    .profile-section {
+      margin-bottom: 30px;
+    }
+    .profile-section h2 {
+      color: #333;
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+    .profile-section p {
+      font-size: 1.1em;
+      line-height: 1.6;
+    }
+    .statistics {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background-color: #e9f7e9;
+      padding: 15px;
+      border-radius: 8px;
+      width: 28%;
+      margin: 10px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .stat-card h3 {
+      margin: 0;
+      color: #4CAF50;
+    }
+    .stat-card p {
+      margin-top: 5px;
+      font-size: 1.1em;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="fragments/navbar.html"></div>
+<div class="container">
+  <h1>Récapitulatif du Profil</h1>
+
+  <!-- Profil Utilisateur -->
+  <div class="profile-section" th:object="${user}">
+    <h2>Informations Personnelles</h2>
+    <p><strong>Nom d'utilisateur:</strong> <span th:text="*{username}"></span></p>
+    <p><strong>Age:</strong> <span th:text="*{age}"></span></p>
+    <p><strong>Taille:</strong> <span th:text="*{taille}"></span></p>
+    <p><strong>Poids:</strong> <span th:text="*{poids}"></span></p>
+  </div>
+
+  <!-- Objectifs de Régime -->
+  <div class="profile-section">
+    <h2>Objectifs du Régime</h2>
+    <p>Objectif principal : Perdre 10 kg en 6 mois.</p>
+    <p>Objectifs secondaires :
+    <ul>
+      <li>Augmenter l'énergie et la vitalité.</li>
+      <li>Améliorer la santé cardiaque.</li>
+      <li>Réduire la masse graisseuse.</li>
+    </ul>
+    </p>
+  </div>
+
+  <!-- Progrès -->
+  <div class="profile-section">
+    <h2>Progrès réalisés</h2>
+    <p><strong>Poids actuel :</strong> 75 kg</p>
+    <p><strong>Perte de poids totale :</strong> 5 kg</p>
+    <p><strong>Progression :</strong> 50% de l'objectif atteint</p>
+  </div>
+
+  <!-- Statistiques -->
+  <div class="profile-section">
+    <h2>Statistiques récentes</h2>
+    <div class="statistics">
+      <div class="stat-card">
+        <h3>Calories brûlées</h3>
+        <p>1200 kcal</p>
+      </div>
+      <div class="stat-card">
+        <h3>Protéines consommées</h3>
+        <p>150 g</p>
+      </div>
+      <div class="stat-card">
+        <h3>Glucides consommés</h3>
+        <p>200 g</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suivi des repas -->
+  <div class="profile-section">
+    <h2>Suivi des Repas</h2>
+    <p><strong>Petit-déjeuner :</strong> Porridge, fruits frais</p>
+    <p><strong>Déjeuner :</strong> Poulet grillé, quinoa, légumes</p>
+    <p><strong>Dîner :</strong> Salade verte, saumon</p>
+  </div>
+
+  <div class="footer">
+    <p>© 2024 Suivi de Régime - Tous droits réservés</p>
+  </div>
+</div>
+
+</body>
+</html>
