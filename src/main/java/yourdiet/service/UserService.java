@@ -1,4 +1,4 @@
-package yourdiet.security;
+package yourdiet.service;
 
 import yourdiet.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yourdiet.repository.UserRepository;
+import yourdiet.security.UserDetailsImpl;
 
 @Service
 @Transactional
@@ -19,6 +20,11 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé : " + username));
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
