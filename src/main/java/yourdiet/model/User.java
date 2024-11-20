@@ -21,6 +21,10 @@ public class User {
     private String username;
 
     private String password;
+    private String sexe;
+    private double poids;
+    private double taille;
+    private int age;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<FoodEntry> foodEntries = new ArrayList<>();
