@@ -22,9 +22,9 @@ public class User {
 
     private String password;
     private String sexe;
-    private double poids;
-    private double taille;
-    private int age;
+    private Double poids;
+    private Double taille;
+    private Integer age;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<FoodEntry> foodEntries = new ArrayList<>();
