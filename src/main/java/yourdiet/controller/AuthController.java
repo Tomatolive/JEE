@@ -1,4 +1,4 @@
-package yourdiet.security;
+package yourdiet.controller;
 
 import yourdiet.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +38,29 @@ public class AuthController {
     public String registerUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
         try {
             userService.registerNewUser(user.getUsername(), user.getPassword());
-            redirectAttributes.addFlashAttribute("successMessage", "Inscription réussie ! Vous pouvez maintenant vous connecter.");
-            return "redirect:/login";
+            redirectAttributes.addFlashAttribute("user", user);
+            return "redirect:/register/attributes";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Erreur lors de l'inscription : " + e.getMessage());
             return "redirect:/register";
         }
+    }
+
+    @GetMapping("/register/attributes")
+    public String showRegistrationAttributes(Model model) {
+        if (!model.containsAttribute("user")) {
+            model.addAttribute("user", new User());
+        }
+        return "register-attributes";
+    }
+
+    @PostMapping("/register/attributes")
+    public String registerUserAttributes(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
+        userService.updateGender(user, user.getGender());
+        userService.updateAge(user, user.getAge());
+        userService.updateHeight(user, user.getHeight());
+        userService.updateWeight(user, user.getWeight());
+        redirectAttributes.addFlashAttribute("successMessage", "Inscription réussie ! Vous pouvez maintenant vous connecter.");
+        return "redirect:/login";
     }
 }
