@@ -1,6 +1,6 @@
 package yourdiet.controller;
 import yourdiet.model.User;
-import yourdiet.security.UserService;
+import yourdiet.service.UserService;
 import yourdiet.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/settings")
+@RequestMapping("/parametres")
 public class SettingsController {
 
     private final UserService userService;
@@ -26,10 +26,10 @@ public class SettingsController {
      * Affiche la page des paramètres utilisateur.
      */
     @GetMapping
-    public String showSettingsPage(@AuthenticationPrincipal User user, Model model) {
-        model.addAttribute("user", user);
+    public String showSettingsPage(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
         return "settings";
     }
+
 
     /**
      * Permet à l'utilisateur de mettre à jour son nom d'utilisateur.
@@ -57,7 +57,7 @@ public class SettingsController {
                                  @RequestParam String confirmPassword,
                                  Model model) {
         try {
-            User user = userDetails.getUser(); // Obtenir l'utilisateur authentifié
+            User user = userDetails.getUser();
             userService.updatePassword(user, oldPassword, newPassword, confirmPassword);
             model.addAttribute("successMessage", "Mot de passe mis à jour avec succès.");
         } catch (Exception e) {

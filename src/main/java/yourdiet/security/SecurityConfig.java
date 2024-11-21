@@ -23,6 +23,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/register", "/h2-console/**", "/css/**", "/js/**").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/diet/**", "/objective").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

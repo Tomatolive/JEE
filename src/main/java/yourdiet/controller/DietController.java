@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import yourdiet.security.UserDetailsImpl;
 import yourdiet.service.DietService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,7 +23,8 @@ public class DietController {
     private DietService dietService;
 
     @GetMapping
-    public String showDashboard(Model model, @AuthenticationPrincipal User user) {
+    public String showDashboard(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
         LocalDate today = LocalDate.now();
         List<FoodEntry> todayEntries = dietService.getDailyEntries(user, today);
         DailyNutrition nutrition = dietService.calculateDailyNutrition(todayEntries);
