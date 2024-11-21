@@ -4,7 +4,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import yourdiet.model.User;
 import yourdiet.security.UserDetailsImpl;
 import yourdiet.service.UserService;
@@ -26,22 +25,30 @@ public class ProfileController {
         model.addAttribute("user", user);
         return "profil";
     }
-/*
+
     // Afficher le formulaire pour modifier le profil
-    @GetMapping("/profile/edit")
+    @GetMapping("/edit")
     public String editUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails,Model model) {
-        User user = userService.getCurrentUser();  // Récupérer l'utilisateur actuel
+        User user = userDetails.getUser(); // Récupérer l'utilisateur actuel
         model.addAttribute("user", user);  // Ajouter l'utilisateur au modèle
-        return "editProfile";  // Nom de la vue pour afficher le formulaire d'édition
+        return "editProfil";  // Nom de la vue pour afficher le formulaire d'édition
     }
-
+/*
     // Traitement de la soumission du formulaire de modification
-    @PostMapping("/profile/edit")
-    public String updateUserProfile(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
-        userService.updateUser(user);  // Mettre à jour l'utilisateur avec les nouvelles informations
-        redirectAttributes.addFlashAttribute("successMessage", "Profil mis à jour avec succès!");
-        return "redirect:/profile";  // Rediriger vers la page de profil après la mise à jour
+    @PostMapping("/edit")
+    public String updateProfil(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                 @RequestParam String newUsername,
+                                 @RequestParam String newAge,
+                                 Model model) {
+        try {
+            User user = userDetails.getUser();
+            userService.updatePassword(user, oldPassword, newPassword, confirmPassword);
+            model.addAttribute("successMessage", "Mot de passe mis à jour avec succès.");
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Erreur : " + e.getMessage());
+        }
+        return "settings";
     }
-*/
 
+*/
 }
