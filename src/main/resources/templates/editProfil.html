@@ -64,27 +64,26 @@
   <h1>Modifier mon Profil</h1>
 
   <!-- Formulaire de modification de profil -->
-  <form action="/profile/edit" method="POST">
+  <form action="/profil/update" method="POST">
     <div class="form-group">
-      <label for="name">Nom</label>
-      <input type="text" id="name" name="name" th:value="${user.username}" required>
+      <label for="newGender">Genre</label>
+      <select id="newGender" name="newGender" th:value="${user.gender}">
+        <option value="Homme">Male</option>
+        <option value="Femme">Female</option>
+        <option value="autre">Other</option>
+      </select>
     </div>
     <div class="form-group">
-    <label for="age">Sexe</label>
-    <input type="number" id="sexe" name="age" th:value="${user.sexe}" required>
+      <label for="newAge">Age</label>
+      <input type="number" step="0.01" id="newAge" name="newAge" th:value="${user.age}" required>
     </div>
     <div class="form-group">
-      <label for="age">Age</label>
-      <input type="number" id="age" name="age" th:value="${user.age}" required>
-    </div>
-
-    <div class="form-group">
-      <label for="age">Taille</label>
-      <input type="number" id="taille" name="age" th:value="${user.taille}" required>
+      <label for="newHeight">Taille</label>
+      <input type="number" step="0.01" id="newHeight" name="newHeight" th:value="${user.height}" required>
     </div>
     <div class="form-group">
-      <label for="age">Poids</label>
-      <input type="number" id="poids" name="age" th:value="${user.poids}" required>
+      <label for="newWeight">Poids</label>
+      <input type="number" step="0.01" id="newWeight" name="newWeight" th:value="${user.weight}" required>
     </div>
     <div class="form-group">
       <button type="submit">Mettre à jour</button>

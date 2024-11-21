@@ -9,15 +9,15 @@ import yourdiet.security.UserDetailsImpl;
 import yourdiet.service.UserService;
 @Controller
 @RequestMapping("/profil")
-public class ProfileController {
+public class ProfilController {
     private final UserService userService;
     @Autowired
-    public ProfileController(UserService userService) {
+    public ProfilController(UserService userService) {
         this.userService = userService;
     }
 
     /**
-     * Affiche la page du profile.
+     * Affiche la page du profil.
      */
     @GetMapping
     public String showProfilPage(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
@@ -28,27 +28,27 @@ public class ProfileController {
 
     // Afficher le formulaire pour modifier le profil
     @GetMapping("/edit")
-    public String editUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails,Model model) {
+    public String editUserProfil(@AuthenticationPrincipal UserDetailsImpl userDetails,Model model) {
         User user = userDetails.getUser(); // Récupérer l'utilisateur actuel
         model.addAttribute("user", user);  // Ajouter l'utilisateur au modèle
         return "editProfil";  // Nom de la vue pour afficher le formulaire d'édition
     }
-/*
+
     // Traitement de la soumission du formulaire de modification
-    @PostMapping("/edit")
+    @PostMapping("/update")
     public String updateProfil(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                 @RequestParam String newUsername,
-                                 @RequestParam String newAge,
+                                 @RequestParam Integer newAge,
+                                 @RequestParam String newGender,
+                                 @RequestParam Double newWeight,
+                                 @RequestParam Double newHeight,
                                  Model model) {
-        try {
-            User user = userDetails.getUser();
-            userService.updatePassword(user, oldPassword, newPassword, confirmPassword);
-            model.addAttribute("successMessage", "Mot de passe mis à jour avec succès.");
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "Erreur : " + e.getMessage());
-        }
-        return "settings";
+        User user = userDetails.getUser();
+        userService.updateAge(user,newAge);
+        userService.updateGender(user,newGender);
+        userService.updateWeight(user,newWeight);
+        userService.updateHeight(user,newHeight);
+        return "profil";
     }
 
-*/
+
 }

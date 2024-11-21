@@ -74,10 +74,10 @@
   <div class="profile-section" th:object="${user}">
     <h2>Informations Personnelles</h2>
     <p><strong>Nom d'utilisateur:</strong> <span th:text="*{username}"></span></p>
-    <p><strong>Sexe:</strong> <span th:text="*{sexe}"></span></p>
+    <p><strong>Genre:</strong> <span th:text="*{gender}"></span></p>
     <p><strong>Age:</strong> <span th:text="*{age}"></span></p>
-    <p><strong>Taille:</strong> <span th:text="*{taille}"></span></p>
-    <p><strong>Poids:</strong> <span th:text="*{poids}"></span></p>
+    <p><strong>Taille:</strong> <span th:text="*{height}"></span></p>
+    <p><strong>Poids:</strong> <span th:text="*{weight}"></span></p>
   </div>
   <a href="/profil/edit" class="btn-edit">Modifier mes informations</a>
 
