@@ -21,9 +21,9 @@ public class User {
     private String username;
 
     private String password;
-    private String sexe;
-    private Double poids;
-    private Double taille;
+    private String gender;
+    private Double weight;
+    private Double height;
     private Integer age;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
