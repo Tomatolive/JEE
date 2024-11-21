@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import yourdiet.DailyNutrition;
-
 @Controller
 @RequestMapping("/diet")
 public class DietController {
