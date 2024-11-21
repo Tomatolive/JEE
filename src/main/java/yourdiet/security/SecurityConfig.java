@@ -21,9 +21,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())  // Désactive CSRF temporairement pour le développement
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/h2-console/**", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/login", "/register/**", "/h2-console/**", "/css/**", "/js/**").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/diet/**", "/objective").hasRole("USER")
+                        .requestMatchers("/diet/**", "/objective", "/profil/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

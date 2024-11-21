@@ -1,7 +1,7 @@
 package yourdiet.controller;
 
 import yourdiet.model.User;
-import yourdiet.security.UserService;
+import yourdiet.service.UserService;
 import yourdiet.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

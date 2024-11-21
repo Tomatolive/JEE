@@ -62,4 +62,24 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+
+    public void updateGender(User user, String gender) {
+        user.setGender(gender);
+        userRepository.save(user);
+    }
+
+    public void updateWeight(User user, Double weight) {
+        user.setWeight(weight);
+        userRepository.save(user);
+    }
+
+    public void updateHeight(User user, Double height) {
+        user.setHeight(height);
+        userRepository.save(user);
+    }
+
+    public void updateAge(User user, Integer age) {
+        user.setAge(age);
+        userRepository.save(user);
+    }
 }
