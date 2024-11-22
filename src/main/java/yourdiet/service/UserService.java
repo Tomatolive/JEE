@@ -26,6 +26,11 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé : " + username));
     }
 
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
@@ -33,7 +38,7 @@ public class UserService implements UserDetailsService {
         return new UserDetailsImpl(user);
     }
 
-    public User registerNewUser(String username, String password) {
+    public User registerNewUser(String username, String password) throws RuntimeException {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new RuntimeException("Username already exists");
         }
@@ -64,22 +69,45 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateGender(User user, String gender) {
-        user.setGender(gender);
-        userRepository.save(user);
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        existingUser.setGender(gender);
+        userRepository.save(existingUser);
     }
 
-    public void updateWeight(User user, Double weight) {
-        user.setWeight(weight);
-        userRepository.save(user);
+    public User updateAge(User user, Integer age) {
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        existingUser.setAge(age);
+        userRepository.save(existingUser);
+        return existingUser;
     }
 
     public void updateHeight(User user, Double height) {
-        user.setHeight(height);
-        userRepository.save(user);
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        existingUser.setHeight(height);
+        userRepository.save(existingUser);
     }
 
-    public void updateAge(User user, Integer age) {
-        user.setAge(age);
-        userRepository.save(user);
+    public void updateWeight(User user, Double weight) {
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        existingUser.setWeight(weight);
+        userRepository.save(existingUser);
+    }
+
+    public void updateTargetWeight(User user, Double targetWeight) {
+        User managedUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        managedUser.setTargetWeight(targetWeight);
+        userRepository.save(managedUser);
+    }
+
+    public void updateActivityLevel(User user, Double activityLevel) {
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        existingUser.setActivityLevel(activityLevel);
+        userRepository.save(existingUser);
     }
 }

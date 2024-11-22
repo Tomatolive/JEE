@@ -21,34 +21,37 @@ public class ProfilController {
      */
     @GetMapping
     public String showProfilPage(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
-        User user = userDetails.getUser();
-        model.addAttribute("user", user);
+        model.addAttribute("user", userDetails.getUser());
         return "profil";
     }
 
     // Afficher le formulaire pour modifier le profil
     @GetMapping("/edit")
-    public String editUserProfil(@AuthenticationPrincipal UserDetailsImpl userDetails,Model model) {
-        User user = userDetails.getUser(); // Récupérer l'utilisateur actuel
-        model.addAttribute("user", user);  // Ajouter l'utilisateur au modèle
-        return "editProfil";  // Nom de la vue pour afficher le formulaire d'édition
+    public String editUserProfil(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
+        User user = userService.getUserById(userDetails.getUserId());
+        model.addAttribute("user", user);
+        return "editProfil";
     }
 
     // Traitement de la soumission du formulaire de modification
     @PostMapping("/update")
-    public String updateProfil(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                 @RequestParam Integer newAge,
-                                 @RequestParam String newGender,
-                                 @RequestParam Double newWeight,
-                                 @RequestParam Double newHeight,
-                                 Model model) {
-        User user = userDetails.getUser();
-        userService.updateAge(user,newAge);
-        userService.updateGender(user,newGender);
-        userService.updateWeight(user,newWeight);
-        userService.updateHeight(user,newHeight);
-        return "profil";
-    }
+    public String updateProfil(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam Integer newAge, @RequestParam String newGender, @RequestParam Double newWeight, @RequestParam Double newHeight, Model model) {
 
+        User user = userDetails.getUser();
+
+        // Mettre à jour l'utilisateur dans la base de données
+        User updatedUser = userService.updateAge(user, newAge);
+        userService.updateGender(updatedUser, newGender);
+        userService.updateWeight(updatedUser, newWeight);
+        userService.updateHeight(updatedUser, newHeight);
+
+        // Mettre à jour les données dans UserDetails
+        userDetails.updateUserData(updatedUser);
+
+        // Ajouter l'utilisateur mis à jour au modèle
+        model.addAttribute("user", updatedUser);
+
+        return "redirect:/profil";
+    }
 
 }

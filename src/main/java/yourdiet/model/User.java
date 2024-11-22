@@ -25,6 +25,8 @@ public class User {
     private Double weight;
     private Double height;
     private Integer age;
+    private Double targetWeight;
+    private Double activityLevel;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<FoodEntry> foodEntries = new ArrayList<>();
