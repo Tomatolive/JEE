@@ -76,6 +76,8 @@ public class AuthController {
             userService.updateAge(user, userForm.getAge());
             userService.updateHeight(user, userForm.getHeight());
             userService.updateWeight(user, userForm.getWeight());
+            userService.updateTargetWeight(user, userForm.getTargetWeight());
+            userService.updateActivityLevel(user, userForm.getActivityLevel());
 
             session.removeAttribute("registeredUserId");
             redirectAttributes.addFlashAttribute("successMessage", "Inscription réussie ! Vous pouvez maintenant vous connecter.");

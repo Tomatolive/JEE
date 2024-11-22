@@ -21,19 +21,27 @@ public class ObjectiveController {
 
     @GetMapping
     public String showObjectives(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        var user = userService.getUserByUsername(userDetails.getUsername());
+        var user = userDetails.getUser();
         var objective = objectiveService.getObjectiveByUser(user);
+
         if (objective == null) {
             objective = new Objective();
+            objective.setUser(user);
         }
+
+        objective = objectiveService.calculateObjective(objective);
         model.addAttribute("objective", objective);
         return "objectives";
     }
 
     @PostMapping("/save")
     public String saveObjectives(@ModelAttribute Objective objective,
+                                 @RequestParam Double targetWeight,
                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        var user = userService.getUserByUsername(userDetails.getUsername());
+        var user = userDetails.getUser();
+        userService.updateTargetWeight(user, targetWeight);
+        objective.setUser(user);
+        objective = objectiveService.calculateObjective(objective);
         objectiveService.saveObjectiveForUser(objective, user);
         return "redirect:/objective";
     }

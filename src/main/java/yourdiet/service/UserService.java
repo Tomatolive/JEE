@@ -96,4 +96,18 @@ public class UserService implements UserDetailsService {
         existingUser.setWeight(weight);
         userRepository.save(existingUser);
     }
+
+    public void updateTargetWeight(User user, Double targetWeight) {
+        User managedUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        managedUser.setTargetWeight(targetWeight);
+        userRepository.save(managedUser);
+    }
+
+    public void updateActivityLevel(User user, Double activityLevel) {
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        existingUser.setActivityLevel(activityLevel);
+        userRepository.save(existingUser);
+    }
 }

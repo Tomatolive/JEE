@@ -19,9 +19,8 @@ public class Objective {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private Double calories;
+    private Integer calories;
     private Double proteins;
     private Double carbs;
     private Double fats;
-    private Double weight;
 }
