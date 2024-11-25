@@ -1,5 +1,6 @@
 package yourdiet.controller;
 
+import jakarta.servlet.http.HttpSession;
 import yourdiet.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,10 +36,10 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
+    public String registerUser(@ModelAttribute("user") User user, HttpSession session, RedirectAttributes redirectAttributes) {
         try {
-            userService.registerNewUser(user.getUsername(), user.getPassword());
-            redirectAttributes.addFlashAttribute("user", user);
+            User savedUser = userService.registerNewUser(user.getUsername(), user.getPassword());
+            session.setAttribute("registeredUserId", savedUser.getId());
             return "redirect:/register/attributes";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Erreur lors de l'inscription : " + e.getMessage());
@@ -47,20 +48,43 @@ public class AuthController {
     }
 
     @GetMapping("/register/attributes")
-    public String showRegistrationAttributes(Model model) {
-        if (!model.containsAttribute("user")) {
-            model.addAttribute("user", new User());
+    public String showRegistrationAttributes(Model model, HttpSession session) {
+        Long userId = (Long) session.getAttribute("registeredUserId");
+        if (userId == null) {
+            return "redirect:/register";
         }
-        return "register-attributes";
+        try {
+            User user = userService.getUserById(userId);
+            model.addAttribute("user", user);
+            return "register-attributes";
+        } catch (Exception e) {
+            return "redirect:/register";
+        }
     }
 
     @PostMapping("/register/attributes")
-    public String registerUserAttributes(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
-        userService.updateGender(user, user.getGender());
-        userService.updateAge(user, user.getAge());
-        userService.updateHeight(user, user.getHeight());
-        userService.updateWeight(user, user.getWeight());
-        redirectAttributes.addFlashAttribute("successMessage", "Inscription réussie ! Vous pouvez maintenant vous connecter.");
-        return "redirect:/login";
+    public String registerUserAttributes(@ModelAttribute("user") User userForm, HttpSession session, RedirectAttributes redirectAttributes) {
+        Long userId = (Long) session.getAttribute("registeredUserId");
+        if (userId == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Session expirée");
+            return "redirect:/register";
+        }
+
+        try {
+            User user = userService.getUserById(userId);
+            userService.updateGender(user, userForm.getGender());
+            userService.updateAge(user, userForm.getAge());
+            userService.updateHeight(user, userForm.getHeight());
+            userService.updateWeight(user, userForm.getWeight());
+            userService.updateTargetWeight(user, userForm.getTargetWeight());
+            userService.updateActivityLevel(user, userForm.getActivityLevel());
+
+            session.removeAttribute("registeredUserId");
+            redirectAttributes.addFlashAttribute("successMessage", "Inscription réussie ! Vous pouvez maintenant vous connecter.");
+            return "redirect:/login";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Erreur : " + e.getMessage());
+            return "redirect:/register";
+        }
     }
 }
