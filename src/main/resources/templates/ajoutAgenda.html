@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajouter un Repas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+  <h1 class="text-center">Ajouter un Repas</h1>
+  <form action="/save-repas" method="POST">
+    <div class="mb-3">
+      <label for="date" class="form-label">Date du repas</label>
+      <input type="date" id="date" name="date" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="mealType" class="form-label">Type de repas</label>
+      <select id="mealType" name="mealType" class="form-select" required>
+        <option value="BREAKFAST">Petit Déjeuner</option>
+        <option value="LUNCH">Déjeuner</option>
+        <option value="DINNER">Dîner</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="foodName" class="form-label">Nom du plat</label>
+      <input type="text" id="foodName" name="foodName" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
