@@ -28,7 +28,7 @@ public class UserService implements UserDetailsService {
 
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé : " + id));
     }
 
     @Override
