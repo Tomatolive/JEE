@@ -35,10 +35,10 @@ public class UserDetailsImpl implements UserDetails {
         return user.getUsername();
     }
 
-    public Long getId() {
+    public Long getUserId() {
         return user.getId();
     }
-}
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -65,3 +65,4 @@ public class UserDetailsImpl implements UserDetails {
         user.setWeight(updatedUser.getWeight());
         user.setHeight(updatedUser.getHeight());
     }
+}

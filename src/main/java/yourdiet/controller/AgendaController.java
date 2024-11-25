@@ -40,11 +40,11 @@ public class AgendaController {
     public String showAgendaPage(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                  @RequestParam(value = "weekOffset", defaultValue = "0") int weekOffset,
                                  Model model) {
-        if (userDetails == null || userDetails.getId() == null) {
+        if (userDetails == null || userDetails.getUserId() == null) {
             return "redirect:/login";
         }
 
-        User user = userService.getUserById(userDetails.getId());
+        User user = userService.getUserById(userDetails.getUserId());
         if (user == null) {
             return "redirect:/login";
         }

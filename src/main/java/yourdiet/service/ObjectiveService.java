@@ -19,9 +19,9 @@ public class ObjectiveService {
 
     private static final double CALORIES_PER_KG = 7700.0; // Calories par kg de poids
     private static final int DAYS_IN_MONTH = 30;
-    private static final double PROTEIN_PERCENTAGE = 0.30; // 30% des calories
-    private static final double CARBS_PERCENTAGE = 0.25;   // 25% des calories
-    private static final double FATS_PERCENTAGE = 0.45;    // 45% des calories
+    private static final double PROTEIN_PERCENTAGE = 0.25; // 25% des calories
+    private static final double CARBS_PERCENTAGE = 0.30;   // 25% des calories
+    private static final double FATS_PERCENTAGE = 0.45;    // 45// % des calories
     private static final double CALORIES_PER_GRAM_PROTEIN = 4.0;
     private static final double CALORIES_PER_GRAM_CARBS = 4.0;
     private static final double CALORIES_PER_GRAM_FATS = 9.0;
@@ -93,9 +93,12 @@ public class ObjectiveService {
     }
 
     private void calculateMacronutrients(Objective objective, double dailyCalories) {
-        double proteinGrams = (dailyCalories * PROTEIN_PERCENTAGE) / CALORIES_PER_GRAM_PROTEIN;
-        double carbsGrams = (dailyCalories * CARBS_PERCENTAGE) / CALORIES_PER_GRAM_CARBS;
-        double fatsGrams = (dailyCalories * FATS_PERCENTAGE) / CALORIES_PER_GRAM_FATS;
+        double caloriesLeft = dailyCalories;
+        double proteinGrams = (caloriesLeft * PROTEIN_PERCENTAGE) / CALORIES_PER_GRAM_PROTEIN;
+        caloriesLeft -= proteinGrams * CALORIES_PER_GRAM_PROTEIN;
+        double carbsGrams = (caloriesLeft * CARBS_PERCENTAGE) / CALORIES_PER_GRAM_CARBS;
+        caloriesLeft -= carbsGrams * CALORIES_PER_GRAM_CARBS;
+        double fatsGrams = (caloriesLeft * FATS_PERCENTAGE) / CALORIES_PER_GRAM_FATS;
 
         objective.setProteins(Math.round(proteinGrams * 10.0) / 10.0);
         objective.setCarbs(Math.round(carbsGrams * 10.0) / 10.0);
