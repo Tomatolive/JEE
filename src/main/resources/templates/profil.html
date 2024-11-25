@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -78,8 +78,8 @@
     <p><strong>Age:</strong> <span th:text="*{age}"></span></p>
     <p><strong>Taille:</strong> <span th:text="*{height}"></span></p>
     <p><strong>Poids:</strong> <span th:text="*{weight}"></span></p>
-  </div>
-  <a href="/profil/edit" class="btn-edit">Modifier mes informations</a>
+    <p><strong>Niveau d'activité physique:</strong> <span th:text="${activityLevel}"></span></p>
+    <a href="/profil/edit" class="btn-edit">Modifier mes informations</a>
 
   <div class="footer">
     <p>© 2024 Suivi de Régime - Tous droits réservés</p>

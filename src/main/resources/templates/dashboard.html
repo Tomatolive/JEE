@@ -7,84 +7,81 @@
 
 <body>
 <div th:replace="~{fragments/navbar.html}"></div>
-<div class="container mt-4">
-    <h1>Dashboard Nutritionnel</h1>
-
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5 class="card-title">Résumé du jour</h5>
-            <div class="row">
-                <div class="col-md-3">
-                    <p>Calories: <span th:text="${nutrition.totalCalories}">0</span> kcal</p>
+<div class="container my-4">
+    <h1 class="text-center">Bienvenue sur votre tableau de bord</h1>
+    <div class="row my-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Calories totales aujourd'hui</h5>
+                        <p class="card-text" th:text="${calories}"></p>
                 </div>
-                <div class="col-md-3">
-                    <p>Protéines: <span th:text="${nutrition.totalProteins}">0</span> g</p>
-                </div>
-                <div class="col-md-3">
-                    <p>Glucides: <span th:text="${nutrition.totalCarbs}">0</span> g</p>
-                </div>
-                <div class="col-md-3">
-                    <p>Lipides: <span th:text="${nutrition.totalFats}">0</span> g</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Objectif calorique</h5>
+                    <p class="card-text" th:text="${calories}">2500</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5 class="card-title">Ajouter un aliment</h5>
-            <form th:action="@{/diet/add}" th:object="${entry}" method="post">
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <input type="text" class="form-control" th:field="*{foodName}" placeholder="Nom de l'aliment">
-                    </div>
-                    <div class="col-md-2 mb-3">
-                        <input type="number" class="form-control" th:field="*{calories}" placeholder="Calories">
-                    </div>
-                    <div class="col-md-2 mb-3">
-                        <input type="number" step="0.1" class="form-control" th:field="*{proteins}" placeholder="Protéines (g)">
-                    </div>
-                    <div class="col-md-2 mb-3">
-                        <input type="number" step="0.1" class="form-control" th:field="*{carbs}" placeholder="Glucides (g)">
-                    </div>
-                    <div class="col-md-2 mb-3">
-                        <input type="number" step="0.1" class="form-control" th:field="*{fats}" placeholder="Lipides (g)">
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Ajouter</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Entrées du jour</h5>
-            <table class="table">
+    <div class="row my-4">
+        <div class="col-md-6">
+            <h3>Derniers repas</h3>
+            <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Aliment</th>
-                    <th>Calories</th>
-                    <th>Protéines</th>
-                    <th>Glucides</th>
-                    <th>Lipides</th>
-                    <th>Heure</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Calories</th>
+                    <th scope="col">Date</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="entry : ${entries}">
-                    <td th:text="${entry.foodName}">-</td>
-                    <td th:text="${entry.calories}">0</td>
-                    <td th:text="${entry.proteins}">0</td>
-                    <td th:text="${entry.carbs}">0</td>
-                    <td th:text="${entry.fats}">0</td>
-                    <td th:text="${#temporals.format(entry.dateTime, 'HH:mm')}">00:00</td>
+                <!--
+                <tr th:each="meal : ${recentMeals}">
+                    <td th:text="${meal.name}">Salade</td>
+                    <td th:text="${meal.calories}">350</td>
+                    <td th:text="${meal.date}">2024-11-22</td>
                 </tr>
+                -->
                 </tbody>
             </table>
         </div>
+        <div class="col-md-6">
+            <h3>Graphique des calories</h3>
+            <canvas id="calorieChart"></canvas>
+        </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!--
+<script>
+    // Exemple de données pour le graphique
+    const ctx = document.getElementById('calorieChart').getContext('2d');
+    const calorieChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
+            datasets: [{
+                label: 'Calories consommées',
+                data: [2000, 1800, 2200, 2100, 1900, 2300, 2000],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+-->
 </body>
 </html>
