@@ -65,17 +65,17 @@ public class ProfilController {
         User user = userDetails.getUser();
 
         // Mettre à jour l'utilisateur dans la base de données
-        userService.updateAge(user, newAge);
-        userService.updateGender(user, newGender);
-        userService.updateWeight(user, newWeight);
-        userService.updateHeight(user, newHeight);
-        userService.updateActivityLevel(user,newActivityLevel);
+        User updatedUser = userService.updateAge(user, newAge);
+        userService.updateGender(updatedUser, newGender);
+        userService.updateWeight(updatedUser, newWeight);
+        userService.updateHeight(updatedUser, newHeight);
+        userService.updateActivityLevel(updatedUser,newActivityLevel);
 
         // Mettre à jour les données dans UserDetails
-        userDetails.updateUserData(user);
+        userDetails.updateUserData(updatedUser);
 
         // Ajouter l'utilisateur mis à jour au modèle
-        model.addAttribute("user", user);
+        model.addAttribute("user", updatedUser);
 
         return "redirect:/profil";
     }
