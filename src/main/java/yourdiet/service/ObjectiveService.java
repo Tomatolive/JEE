@@ -19,9 +19,6 @@ public class ObjectiveService {
 
     private static final double CALORIES_PER_KG = 7700.0; // Calories par kg de poids
     private static final int DAYS_IN_MONTH = 30;
-    private static final double PROTEIN_PERCENTAGE = 0.25; // 25% des calories
-    private static final double CARBS_PERCENTAGE = 0.30;   // 25% des calories
-    private static final double FATS_PERCENTAGE = 0.45;    // 45// % des calories
     private static final double CALORIES_PER_GRAM_PROTEIN = 4.0;
     private static final double CALORIES_PER_GRAM_CARBS = 4.0;
     private static final double CALORIES_PER_GRAM_FATS = 9.0;
@@ -63,6 +60,10 @@ public class ObjectiveService {
             dailyCalories += additionalCaloriesPerDay;
         }
 
+        // Ajouter les calories de thermogenèse (10% des calories totales)
+        double thermogenesisCalories = dailyCalories * 0.10;
+        dailyCalories += thermogenesisCalories;
+
         // S'assurer que les calories quotidiennes restent dans des limites saines
         double minimumCalories = user.getGender().equals("Male") ? 1500.0 : 1200.0;
         double maximumCalories = user.getGender().equals("Male") ? 4000.0 : 3500.0;
@@ -75,7 +76,7 @@ public class ObjectiveService {
         return objective;
     }
 
-    private double calculateBasalMetabolism(User user) {
+	private double calculateBasalMetabolism(User user) {
         if (user.getWeight() == null || user.getHeight() == null || user.getAge() == null) {
             throw new IllegalArgumentException("Données utilisateur incomplètes");
         }
@@ -93,13 +94,44 @@ public class ObjectiveService {
     }
 
     private void calculateMacronutrients(Objective objective, double dailyCalories) {
-        double caloriesLeft = dailyCalories;
-        double proteinGrams = (caloriesLeft * PROTEIN_PERCENTAGE) / CALORIES_PER_GRAM_PROTEIN;
-        caloriesLeft -= proteinGrams * CALORIES_PER_GRAM_PROTEIN;
-        double carbsGrams = (caloriesLeft * CARBS_PERCENTAGE) / CALORIES_PER_GRAM_CARBS;
-        caloriesLeft -= carbsGrams * CALORIES_PER_GRAM_CARBS;
-        double fatsGrams = (caloriesLeft * FATS_PERCENTAGE) / CALORIES_PER_GRAM_FATS;
+        double proteinPercentage;
+        double carbsPercentage;
+        double fatsPercentage;
 
+        double activityLevel = objective.getUser().getActivityLevel();
+        if (activityLevel <= 1.2) {
+            proteinPercentage = 0.30;
+            carbsPercentage = 0.25;
+            fatsPercentage = 0.45;
+        } else if (activityLevel <= 1.375) {
+            proteinPercentage = 0.25;
+            carbsPercentage = 0.30;
+            fatsPercentage = 0.45;
+        } else if (activityLevel <= 1.55) {
+            proteinPercentage = 0.20;
+            carbsPercentage = 0.40;
+            fatsPercentage = 0.40;
+        } else if (activityLevel <= 1.725) {
+            proteinPercentage = 0.20;
+            carbsPercentage = 0.50;
+            fatsPercentage = 0.30;
+        } else {
+            proteinPercentage = 0.15;
+            carbsPercentage = 0.55;
+            fatsPercentage = 0.30;
+        }
+
+        // Calculer les calories pour chaque macronutriment
+        double proteinCalories = dailyCalories * proteinPercentage;
+        double carbsCalories = dailyCalories * carbsPercentage;
+        double fatsCalories = dailyCalories * fatsPercentage;
+
+        // Convertir les calories en grammes
+        double proteinGrams = proteinCalories / CALORIES_PER_GRAM_PROTEIN;
+        double carbsGrams = carbsCalories / CALORIES_PER_GRAM_CARBS;
+        double fatsGrams = fatsCalories / CALORIES_PER_GRAM_FATS;
+
+        // Arrondir les valeurs à une décimale
         objective.setProteins(Math.round(proteinGrams * 10.0) / 10.0);
         objective.setCarbs(Math.round(carbsGrams * 10.0) / 10.0);
         objective.setFats(Math.round(fatsGrams * 10.0) / 10.0);
