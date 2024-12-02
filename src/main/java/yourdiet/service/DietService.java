@@ -32,10 +32,42 @@ public class DietService {
         return foodEntryRepository.save(entry);
     }
 
-    public List<FoodEntry> getDailyEntries(User user, LocalDate date) {
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end = date.plusDays(1).atStartOfDay();
-        return foodEntryRepository.findByUserAndDateTimeBetween(user, start, end);
+    public List<FoodEntry> getDailyFood(User user, LocalDate date) {
+        Map<LocalDate, List<FoodEntry>> foodWeek = getFoodAgenda(user,date,date);
+        return (foodWeek.get(date));
+    }
+    public Integer getDailyCalories(User user, LocalDate date){
+        Integer totalCalories = 0;
+        if (getDailyFood(user,date)!=null){
+            for (FoodEntry entry : getDailyFood(user,date)) {
+                totalCalories += entry.getCalories();
+            }
+            return (totalCalories);
+        }
+        else{
+            return(-1);
+        }
+    }
+    public Double getDailyProteins(User user, LocalDate date){
+        Double total = Double.valueOf(0);
+        for (FoodEntry entry : getDailyFood(user,date)) {
+            total += entry.getProteins();
+        }
+        return total;
+    }
+    public Double getDailyCarbs(User user, LocalDate date){
+        Double total = Double.valueOf(0);
+        for (FoodEntry entry : getDailyFood(user,date)) {
+            total += entry.getCarbs();
+        }
+        return total;
+    }
+    public Double getDailyFats(User user, LocalDate date){
+        Double total = Double.valueOf(0);
+        for (FoodEntry entry : getDailyFood(user,date)) {
+            total += entry.getFats();
+        }
+        return total;
     }
 
     public DailyNutrition calculateDailyNutrition(List<FoodEntry> entries) {

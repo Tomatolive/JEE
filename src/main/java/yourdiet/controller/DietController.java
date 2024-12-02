@@ -29,14 +29,19 @@ public class DietController {
         User user = userDetails.getUser();
         LocalDate today = LocalDate.now();
         Objective objective = objectiveService.getObjectiveByUser(user);
-        //List<FoodEntry> todayEntries = dietService.getDailyEntries(user, today);
-        //DailyNutrition nutrition = dietService.calculateDailyNutrition(todayEntries);
         if (objective == null) {
             objective = new Objective();
             objective.setUser(user);
         }
         objective = objectiveService.calculateObjective(objective);
         model.addAttribute("calories", objective.getCalories());
+        Integer dailyCalories = dietService.getDailyCalories(user,today);
+        if(dailyCalories==-1){
+            model.addAttribute("dailyCalories", "Vous n'avez pas mangé aujourd'hui");
+        }
+        else{
+            model.addAttribute("dailyCalories", dailyCalories);
+        }
         return "dashboard";
     }
 
