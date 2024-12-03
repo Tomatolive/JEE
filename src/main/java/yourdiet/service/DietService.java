@@ -95,4 +95,8 @@ public class DietService {
         // Retourner un agenda vide si aucune donnée n'est trouvée
         return agenda != null ? agenda : new HashMap<>();
     }
+
+    public List<FoodEntry> getFoodEntriesForUser(User user) {
+        return foodEntryRepository.findByUser(user);
+    }
 }
