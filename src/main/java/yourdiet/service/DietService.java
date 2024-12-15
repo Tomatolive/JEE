@@ -205,4 +205,14 @@ public class DietService {
     public List<FoodAgenda> getFoodAgendaEntries(User user, LocalDate startOfWeek, LocalDate endOfWeek) {
         return foodAgendaRepository.findByUserAndDateAgendaBetween(user, startOfWeek, endOfWeek);
     }
+
+    /**
+     * Récupère les entrées de l'agenda alimentaire pour un utilisateur donné, à une date donnée.
+     * @param user L'utilisateur pour lequel récupérer les entrées de l'agenda.
+     * @param date La date pour laquelle récupérer les entrées de l'agenda.
+     * @return Une liste des entrées de l'agenda alimentaire pour l'utilisateur à la date spécifiée.
+     */
+    public List<FoodAgenda> getFoodAgendaEntriesForDay(User user, LocalDate date) {
+        return foodAgendaRepository.findByUserAndDateAgenda(user, date);
+    }
 }
