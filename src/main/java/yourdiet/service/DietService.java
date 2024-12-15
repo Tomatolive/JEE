@@ -88,13 +88,16 @@ public class DietService {
 
         Map<LocalDate, List<FoodEntry>> agenda = new HashMap<>();
         for (FoodAgenda foodAgenda : foodAgendas) {
+            if (foodAgenda.getFoodEntry() == null) {
+                System.out.println("Erreur: FoodEntry manquant pour FoodAgenda ID " + foodAgenda.getId());
+                continue;
+            }
             LocalDate date = foodAgenda.getDateAgenda();
             agenda.computeIfAbsent(date, k -> new ArrayList<>()).add(foodAgenda.getFoodEntry());
         }
 
         return agenda;
     }
-
     public List<FoodEntry> getFoodEntriesForUser(User user) {
         return foodEntryRepository.findByUser(user);
     }
@@ -112,5 +115,9 @@ public class DietService {
         existingEntry.setCarbs(updatedEntry.getCarbs());
         existingEntry.setFats(updatedEntry.getFats());
         return foodEntryRepository.save(existingEntry);
+    }
+
+    public List<FoodAgenda> getFoodAgendaEntries(User user, LocalDate startOfWeek, LocalDate endOfWeek) {
+        return foodAgendaRepository.findByUserAndDateAgendaBetween(user, startOfWeek, endOfWeek);
     }
 }

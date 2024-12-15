@@ -32,11 +32,21 @@ public class User {
     private Double activityLevel;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<FoodEntry> foodEntries = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<FoodAgenda> foodAgendas = new ArrayList<>();
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                '}';
     }
 }
