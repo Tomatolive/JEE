@@ -51,6 +51,24 @@
             border: 1px solid #ced4da;
             border-radius: 5px;
         }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px; /* Espacement entre les tags */
+            justify-content: center; /* Centrer les tags */
+        }
+
+        .tag-label {
+            background-color: #dff9fb; /* Couleur de fond */
+            color: #2c3e50; /* Couleur du texte */
+            font-size: 0.875rem; /* Taille de la police */
+            font-weight: 600; /* Épaisseur de la police */
+            border-radius: 15px; /* Coins arrondis */
+            padding: 5px 10px; /* Espacement intérieur */
+            border: 1px solid #c7ecee; /* Bordure subtile */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Légère ombre */
+        }
     </style>
 </head>
 <body>
@@ -61,6 +79,7 @@
 
     <div class="search-bar">
         <input type="text" id="searchInput" placeholder="Rechercher un repas..." onkeyup="filterTable()">
+        <a href="#" th:href="@{/tags}" class="btn btn-secondary btn-rounded">Gérer mes tags</a>
     </div>
 
     <form class="row g-3 mb-4" th:action="@{/listeRepas/ajouter}" th:object="${foodEntry}" method="post">
@@ -68,16 +87,22 @@
             <input type="text" class="form-control" name="foodName" placeholder="Nom du repas" required>
         </div>
         <div class="col-md-2">
-            <input type="number" class="form-control" name="calories" placeholder="Calories" required>
+            <input type="number" class="form-control" name="calories" placeholder="Calories" required min="0">
         </div>
         <div class="col-md-2">
-            <input type="number" step="0.1" class="form-control" name="proteins" placeholder="Protéines (g)" required>
+            <input type="number" step="0.1" class="form-control" name="proteins" placeholder="Protéines (g)" required min="0">
         </div>
         <div class="col-md-2">
-            <input type="number" step="0.1" class="form-control" name="carbs" placeholder="Glucides (g)" required>
+            <input type="number" step="0.1" class="form-control" name="carbs" placeholder="Glucides (g)" required min="0">
         </div>
         <div class="col-md-2">
-            <input type="number" step="0.1" class="form-control" name="fats" placeholder="Lipides (g)" required>
+            <input type="number" step="0.1" class="form-control" name="fats" placeholder="Lipides (g)" required min="0">
+        </div>
+        <div class="col-md-3">
+            <select class="form-control" name="tags" multiple>
+                <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"></option>
+            </select>
+            <small>Maintenir Ctrl pour sélectionner plusieurs tags.</small>
         </div>
         <div class="col-md-1 text-end">
             <button type="submit" class="btn btn-primary btn-rounded">Ajouter</button>
@@ -93,8 +118,9 @@
                 <th>Protéines (g)</th>
                 <th>Glucides (g)</th>
                 <th>Lipides (g)</th>
+                <th>Tags</th>
                 <th>Modification</th>
-                <th>Supression</th>
+                <th>Suppression</th>
             </tr>
             </thead>
             <tbody>
@@ -106,19 +132,24 @@
                     </td>
                     <td>
                         <span th:text="${meal.calories}" class="meal-data"></span>
-                        <input type="number" class="form-control meal-edit" name="calories" th:value="${meal.calories}" style="display: none;">
+                        <input type="number" class="form-control meal-edit" name="calories" th:value="${meal.calories}" style="display: none;" min="0">
                     </td>
                     <td>
                         <span th:text="${meal.proteins}" class="meal-data"></span>
-                        <input type="number" step="0.1" class="form-control meal-edit" name="proteins" th:value="${meal.proteins}" style="display: none;">
+                        <input type="number" step="0.1" class="form-control meal-edit" name="proteins" th:value="${meal.proteins}" style="display: none;" min="0">
                     </td>
                     <td>
                         <span th:text="${meal.carbs}" class="meal-data"></span>
-                        <input type="number" step="0.1" class="form-control meal-edit" name="carbs" th:value="${meal.carbs}" style="display: none;">
+                        <input type="number" step="0.1" class="form-control meal-edit" name="carbs" th:value="${meal.carbs}" style="display: none;" min="0">
                     </td>
                     <td>
                         <span th:text="${meal.fats}" class="meal-data"></span>
-                        <input type="number" step="0.1" class="form-control meal-edit" name="fats" th:value="${meal.fats}" style="display: none;">
+                        <input type="number" step="0.1" class="form-control meal-edit" name="fats" th:value="${meal.fats}" style="display: none;" min="0">
+                    </td>
+                    <td>
+                        <div class="tags-container">
+                            <span th:each="tag : ${meal.tags}" th:text="${tag.name}" class="tag-label"></span>
+                        </div>
                     </td>
                     <td class="action-buttons">
                         <button type="button" class="btn btn-warning btn-sm btn-rounded" onclick="enableEdit(this)">Modifier</button>

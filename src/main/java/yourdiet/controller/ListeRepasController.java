@@ -1,6 +1,7 @@
 package yourdiet.controller;
 
 import yourdiet.model.FoodEntry;
+import yourdiet.model.Tags;
 import yourdiet.model.User;
 import yourdiet.service.DietService;
 import yourdiet.service.UserService;
@@ -26,20 +27,30 @@ public class ListeRepasController {
     public String showListeRepasPage(Model model, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         List<FoodEntry> meals = dietService.getFoodEntriesForUser(user);
+        List<Tags> userTags = userService.getUserTags(user);
         model.addAttribute("meals", meals);
+        model.addAttribute("tags", userTags);
         return "listeRepas";
     }
 
     @PostMapping("/ajouter")
-    public String addMeal(@ModelAttribute FoodEntry foodEntry, Principal principal) {
+    public String addMeal(@ModelAttribute FoodEntry foodEntry, @RequestParam List<Long> tags, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         foodEntry.setUser(user);
+
+        // Ajoutez les tags à l'entrée alimentaire
+        if (tags != null) {
+            List<Tags> selectedTags = userService.getTagsByIds(tags);
+            foodEntry.setTags(selectedTags);
+        }
+
         dietService.addFoodEntry(foodEntry);
         return "redirect:/listeRepas";
     }
 
     @PostMapping("/supprimer/{id}")
-    public String deleteMeal(@PathVariable Long id) {
+    public String deleteRepas(@PathVariable Long id) {
+        System.out.println("Suppression du repas avec l'id: " + id);
         dietService.deleteMeal(id);
         return "redirect:/listeRepas";
     }

@@ -1,5 +1,6 @@
 package yourdiet.service;
 
+import yourdiet.model.Tags;
 import yourdiet.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,8 +9,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import yourdiet.repository.TagsRepository;
 import yourdiet.repository.UserRepository;
 import yourdiet.security.UserDetailsImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -17,9 +22,10 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TagsRepository tagsRepository;
 
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username)
@@ -109,5 +115,21 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
         existingUser.setActivityLevel(activityLevel);
         userRepository.save(existingUser);
+    }
+
+    public List<Tags> getUserTags(User user) {
+        return tagsRepository.findByUser(user);
+    }
+
+    public List<Tags> getTagsByIds(List<Long> tagIds) {
+        return tagsRepository.findAllById(tagIds);
+    }
+
+    public void saveTag(Tags tag) {
+        tagsRepository.save(tag);
+    }
+
+    public void deleteTag(Long id) {
+        tagsRepository.deleteById(id);
     }
 }
