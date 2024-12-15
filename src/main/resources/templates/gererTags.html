@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gérer mes Tags</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      color: #34495e;
+    }
+
+    .table-modern {
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .table-modern th {
+      background-color: #f1f3f5;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .table-modern tbody tr:hover {
+      background-color: #e9f5ff;
+    }
+
+    .btn-rounded {
+      border-radius: 20px;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="~{fragments/navbar.html}"></div>
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Gérer mes Tags</h1>
+
+  <form th:action="@{/tags/ajouter}" method="post" class="mb-4">
+    <div class="input-group">
+      <input type="text" class="form-control" name="tagName" placeholder="Nom du tag" required>
+      <button type="submit" class="btn btn-primary btn-rounded">Ajouter Tag</button>
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-modern text-center align-middle">
+      <thead class="table-light">
+      <tr>
+        <th>Nom du Tag</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="tag : ${tags}">
+        <td th:text="${tag.name}"></td>
+        <td>
+          <form th:action="@{/tags/supprimer/{id}(id=${tag.id})}" method="post" class="d-inline">
+            <button type="submit" class="btn btn-danger btn-sm btn-rounded">Supprimer</button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

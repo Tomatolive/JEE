@@ -86,7 +86,7 @@ public class AgendaController {
     }
 
     @GetMapping("/ajouter-repas")
-    public String afficherFormulaireAjoutAgenda(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
+    public String showAjoutAgendaPage(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
         if (userDetails == null || userDetails.getUserId() == null) {
             return "redirect:/login";
         }
