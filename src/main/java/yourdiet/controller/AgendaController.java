@@ -1,5 +1,6 @@
 package yourdiet.controller;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import yourdiet.model.FoodAgenda;
@@ -7,6 +8,7 @@ import yourdiet.model.FoodEntry;
 import yourdiet.model.User;
 import yourdiet.repository.FoodAgendaRepository;
 import yourdiet.repository.FoodEntryRepository;
+import yourdiet.repository.UserRepository;
 import yourdiet.service.DietService;
 import yourdiet.service.UserService;
 import yourdiet.security.UserDetailsImpl;
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+
 @Controller
 @RequestMapping("/agenda")
 public class AgendaController {
@@ -32,6 +35,8 @@ public class AgendaController {
     private final DietService dietService;
     private final FoodEntryRepository foodEntryRepository;
     private final FoodAgendaRepository foodAgendaRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     public AgendaController(UserService userService,
@@ -48,40 +53,42 @@ public class AgendaController {
      * Affiche la page Agenda.
      */
     @GetMapping
-    public String showAgendaPage(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                 @RequestParam(value = "weekOffset", defaultValue = "0") int weekOffset,
-                                 Model model) {
-        if (userDetails == null || userDetails.getUserId() == null) {
-            return "redirect:/login";
-        }
+    public String showAgendaPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        // Récupération de l'utilisateur courant
+        User currentUser = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
-        User user = userService.getUserById(userDetails.getUserId());
-        if (user == null) {
-            return "redirect:/login";
-        }
-
-        // Calcul de la semaine à afficher
+        // Calcul des dates de la semaine courante (lundi à dimanche)
         LocalDate today = LocalDate.now();
-        LocalDate startOfWeek = today.plusWeeks(weekOffset).with(DayOfWeek.MONDAY);
-        LocalDate endOfWeek = startOfWeek.plusDays(6);
+        LocalDate startOfWeek = today.with(DayOfWeek.MONDAY);
+        LocalDate endOfWeek = today.with(DayOfWeek.SUNDAY);
 
-        // Récupération des données alimentaires de l'utilisateur pour cette semaine
-        Map<LocalDate, List<FoodEntry>> agenda = dietService.getFoodAgenda(user, startOfWeek, endOfWeek);
+        // Récupération de l'agenda
+        List<FoodAgenda> weeklyAgenda = dietService.getFoodAgendaEntries(currentUser, startOfWeek, endOfWeek);
 
-        // Normalisation de l'agenda : Initialisation des jours sans entrées avec une liste vide
-        Map<LocalDate, List<FoodEntry>> normalizedAgenda = new HashMap<>();
-        for (int i = 0; i <= 6; i++) {
-            LocalDate date = startOfWeek.plusDays(i);
-            normalizedAgenda.put(date, agenda.getOrDefault(date, new ArrayList<>()));
+        // Organisation des repas
+        Map<LocalDate, Map<String, List<FoodEntry>>> agenda = new HashMap<>();
+        for (LocalDate date = startOfWeek; !date.isAfter(endOfWeek); date = date.plusDays(1)) {
+            agenda.putIfAbsent(date, new HashMap<>());
+
+            // Remplissage des repas pour chaque jour, même s'il n'y en a pas
+            agenda.get(date).putIfAbsent("BREAKFAST", new ArrayList<>());
+            agenda.get(date).putIfAbsent("LUNCH", new ArrayList<>());
+            agenda.get(date).putIfAbsent("DINNER", new ArrayList<>());
+        }
+
+        for (FoodAgenda entry : weeklyAgenda) {
+            LocalDate date = entry.getDateAgenda();
+            String mealType = String.valueOf(entry.getMealType());
+            FoodEntry foodEntry = entry.getFoodEntry();
+
+            agenda.computeIfAbsent(date, k -> new HashMap<>());
+            agenda.get(date).computeIfAbsent(mealType, k -> new ArrayList<>()).add(foodEntry);
         }
 
         // Ajout des données au modèle
-        model.addAttribute("weekOffset", weekOffset);
-        model.addAttribute("startOfWeek", startOfWeek);
-        model.addAttribute("endOfWeek", endOfWeek);
-        model.addAttribute("agenda", normalizedAgenda);
-        model.addAttribute("days", List.of("LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"));
-
+        model.addAttribute("agenda", agenda);
+        System.out.println("Agenda : " + agenda);
         return "agenda";
     }
 

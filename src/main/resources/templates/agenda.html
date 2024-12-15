@@ -3,117 +3,141 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agenda Alimentaire</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <title>Agenda Hebdomadaire</title>
   <style>
-    .table-modern {
+    .agenda-container {
+      font-family: 'Inter', sans-serif;
+      margin: 20px;
+    }
+
+    .agenda-container .btn-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .agenda-container .btn-primary {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+    }
+
+    .agenda-container .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    .agenda-container h1 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      color: #34495e;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .agenda-container .table-modern {
+      width: 90%;
+      margin: 0 auto;
+      border-collapse: collapse;
       background: #fff;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      min-height: 60vh;
-      width: 100%;
+      border-spacing: 0;
     }
 
-    .table-modern th,
-    .table-modern td {
-      padding: 2rem;
-      min-width: 150px;
-      border-right: 1px solid #ddd; /
-    }
-
-    .table-modern th:last-child,
-    .table-modern td:last-child {
-      border-right: none;
-    }
-
-    .table-modern th {
+    .agenda-container .table-modern th {
       background-color: #f1f3f5;
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: 1rem;
+      color: #2c3e50;
+      padding: 12px;
     }
 
-    .table-modern tbody tr:hover {
+    .agenda-container .table-modern td {
+      padding: 10px;
+      border: 1px solid #dee2e6;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .agenda-container .table-modern tbody tr:nth-child(odd) {
+      background-color: #f9f9f9;
+    }
+
+    .agenda-container .table-modern tbody tr:hover {
       background-color: #e9f5ff;
+    }
+
+    .agenda-container ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .agenda-container ul li {
+      margin: 5px 0;
+      padding: 5px 10px;
+      background-color: #dff9fb;
+      color: #2c3e50;
+      border-radius: 15px;
+      font-size: 0.875rem;
+      display: inline-block;
+    }
+
+    .agenda-container ul .no-data {
+      color: #868e96;
+      font-style: italic;
+      background-color: #f1f3f5;
+      border-radius: 10px;
+      padding: 5px 10px;
+      display: inline-block;
     }
   </style>
 </head>
 <body>
 <div th:replace="~{fragments/navbar.html}"></div>
 
-<div class="container mt-5">
-  <h1 class="text-center fw-bold">Mon Agenda Alimentaire</h1>
-  <a href="agenda/ajouter-repas" class="btn btn-primary btn-rounded px-5 py-2">Ajouter un repas</a>
+<div class="agenda-container">
+  <h1>Agenda Hebdomadaire</h1>
 
-  <div class="d-flex justify-content-between align-items-center my-5">
-    <a th:href="@{/agenda(weekOffset=${weekOffset - 1})}" class="btn btn-outline-primary btn-rounded px-4 py-2">
-      &larr; Semaine précédente
-    </a>
-    <h2 class="text-primary fw-semibold">
-      Semaine du <span th:text="${startOfWeek}"></span> au <span th:text="${endOfWeek}"></span>
-    </h2>
-    <a th:href="@{/agenda(weekOffset=${weekOffset + 1})}" class="btn btn-outline-primary btn-rounded px-4 py-2">
-      Semaine suivante &rarr;
-    </a>
+  <div class="btn-container">
+    <a href="agenda/ajouter-repas" class="btn btn-primary btn-rounded">Ajouter un repas</a>
   </div>
 
-  <div class="table-responsive rounded-3 shadow">
-    <table class="table align-middle text-center table-modern">
-      <thead class="table-light">
-      <tr>
-        <th scope="col">Repas</th>
-        <th th:each="day : ${days}" th:text="${day}">Jour</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td class="fw-semibold text-secondary">Petit Déjeuner</td>
-        <td th:each="dayStat : ${#numbers.sequence(0, 6)}">
-          <ul class="list-unstyled m-0 p-0">
-            <li th:each="entry : ${agenda[startOfWeek.plusDays(dayStat)]}"
-                th:if="${entry.mealType == 'BREAKFAST'}"
-                th:text="${entry.foodName}">Aucun repas</li>
-          </ul>
-        </td>
-      </tr>
-      <tr>
-        <td class="fw-semibold text-secondary">Déjeuner</td>
-        <td th:each="dayStat : ${#numbers.sequence(0, 6)}">
-          <ul class="list-unstyled m-0 p-0">
-            <li th:each="entry : ${agenda[startOfWeek.plusDays(dayStat)]}"
-                th:if="${entry.mealType == 'LUNCH'}"
-                th:text="${entry.foodName}">Aucun repas</li>
-          </ul>
-        </td>
-      </tr>
-      <tr>
-        <td class="fw-semibold text-secondary">Dîner</td>
-        <td th:each="dayStat : ${#numbers.sequence(0, 6)}">
-          <ul class="list-unstyled m-0 p-0">
-            <li th:each="entry : ${agenda[startOfWeek.plusDays(dayStat)]}"
-                th:if="${entry.mealType == 'DINNER'}"
-                th:text="${entry.foodName}">Aucun repas</li>
-          </ul>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+  <table class="table-modern">
+    <thead>
+    <tr>
+      <th>Jour</th>
+      <th>Petit Déjeuner</th>
+      <th>Déjeuner</th>
+      <th>Dîner</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="entry : ${agenda}">
+      <td th:text="${entry.key}">Date</td>
+      <td>
+        <ul>
+          <li th:each="meal : ${entry.value['BREAKFAST']}" th:text="${meal.foodName}"></li>
+          <li th:if="${entry.value['BREAKFAST'] == null || entry.value['BREAKFAST'].isEmpty()}" class="no-data">Aucun</li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li th:each="meal : ${entry.value['LUNCH']}" th:text="${meal.foodName}"></li>
+          <li th:if="${entry.value['LUNCH'] == null || entry.value['LUNCH'].isEmpty()}" class="no-data">Aucun</li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li th:each="meal : ${entry.value['DINNER']}" th:text="${meal.foodName}"></li>
+          <li th:if="${entry.value['DINNER'] == null || entry.value['DINNER'].isEmpty()}" class="no-data">Aucun</li>
+        </ul>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>
 
-<script>
-  // Script pour effet de survol sur les cellules du tableau
-  document.addEventListener("DOMContentLoaded", function () {
-    const cells = document.querySelectorAll("tbody td"); // Sélectionne toutes les cellules du tableau
-    cells.forEach(cell => {
-      cell.addEventListener("mouseenter", () => {
-        cell.classList.add("table-active"); // Ajoute une classe au survol
-      });
-      cell.addEventListener("mouseleave", () => {
-        cell.classList.remove("table-active"); // Retire la classe lorsque le survol cesse
-      });
-    });
-  });
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
