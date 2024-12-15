@@ -69,6 +69,15 @@
             border: 1px solid #c7ecee;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -166,6 +175,11 @@
         </table>
     </div>
 </div>
+
+<div class="footer">
+    <p>© 2024 Suivi de Régime - Tous droits réservés</p>
+</div>
+
 <script>
     function filterTable() {
         const searchValue = document.getElementById("searchInput").value.toLowerCase();
