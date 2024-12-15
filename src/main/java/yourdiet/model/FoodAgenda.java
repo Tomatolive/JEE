@@ -1,4 +1,5 @@
 package yourdiet.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,10 +19,12 @@ public class FoodAgenda {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "food_id", nullable = false)
+    @JsonIgnore
     private FoodEntry foodEntry;
 
     @Column(name = "date_agenda", nullable = false)

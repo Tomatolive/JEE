@@ -10,9 +10,6 @@ import org.springframework.ui.Model;
 import yourdiet.security.UserDetailsImpl;
 import yourdiet.service.DietService;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import yourdiet.DailyNutrition;
 import yourdiet.service.ObjectiveService;
 
 @Controller

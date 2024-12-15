@@ -34,12 +34,11 @@ public class ListeRepasController {
     }
 
     @PostMapping("/ajouter")
-    public String addMeal(@ModelAttribute FoodEntry foodEntry, @RequestParam List<Long> tags, Principal principal) {
+    public String addMeal(@ModelAttribute FoodEntry foodEntry, @RequestParam(required = false) List<Long> tags, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         foodEntry.setUser(user);
 
-        // Ajoutez les tags à l'entrée alimentaire
-        if (tags != null) {
+        if (tags != null && !tags.isEmpty()) {
             List<Tags> selectedTags = userService.getTagsByIds(tags);
             foodEntry.setTags(selectedTags);
         }

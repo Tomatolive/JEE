@@ -11,6 +11,7 @@ import yourdiet.repository.UserRepository;
 @Service
 @Transactional
 public class ObjectiveService {
+
     @Autowired
     private ObjectiveRepository objectiveRepository;
 
@@ -23,12 +24,27 @@ public class ObjectiveService {
     private static final double CALORIES_PER_GRAM_CARBS = 4.0;
     private static final double CALORIES_PER_GRAM_FATS = 9.0;
 
+    /**
+     * Récupère l'objectif nutritionnel d'un utilisateur donné.
+     *
+     * @param user L'utilisateur pour lequel récupérer l'objectif.
+     * @return L'objectif nutritionnel associé à l'utilisateur.
+     * @throws RuntimeException Si l'utilisateur n'est pas trouvé.
+     */
     public Objective getObjectiveByUser(User user) {
         User managedUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
         return objectiveRepository.findByUser(managedUser);
     }
 
+    /**
+     * Enregistre un objectif nutritionnel pour un utilisateur donné.
+     *
+     * @param objective L'objectif nutritionnel à enregistrer.
+     * @param user L'utilisateur auquel l'objectif appartient.
+     * @return L'objectif nutritionnel enregistré.
+     * @throws RuntimeException Si l'utilisateur n'est pas trouvé.
+     */
     public Objective saveObjectiveForUser(Objective objective, User user) {
         User managedUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
@@ -57,11 +73,10 @@ public class ObjectiveService {
             double maxWeightChangePerMonth = weightDifference > 0 ? 2.0 : -2.0;
             weightDifference = Math.min(Math.max(weightDifference, -maxWeightChangePerMonth), maxWeightChangePerMonth);
 
-            // Calculer les calories supplémentaires/déficitaires par jour
-            // Pour gagner/perdre weightDifference kg en un mois
+            // Calculer les calories supplémentaires/déficitaires par jour pour atteindre l'objectif de poids
             double additionalCaloriesPerDay = (CALORIES_PER_KG * weightDifference) / DAYS_IN_MONTH;
 
-            // Ajouter/soustraire ces calories au métabolisme de base
+            // Ajouter ou soustraire ces calories au métabolisme de base
             dailyCalories += additionalCaloriesPerDay;
         }
 
@@ -114,6 +129,7 @@ public class ObjectiveService {
         double fatsPercentage;
 
         double activityLevel = objective.getUser().getActivityLevel();
+        // Déterminer les pourcentages des macronutriments en fonction du niveau d'activité
         if (activityLevel <= 1.2) {
             proteinPercentage = 0.30;
             carbsPercentage = 0.25;
@@ -136,7 +152,7 @@ public class ObjectiveService {
             fatsPercentage = 0.30;
         }
 
-        // Calculer les calories pour chaque macronutriment
+        // Calculer les calories associées à chaque macronutriment
         double proteinCalories = dailyCalories * proteinPercentage;
         double carbsCalories = dailyCalories * carbsPercentage;
         double fatsCalories = dailyCalories * fatsPercentage;
