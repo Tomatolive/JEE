@@ -22,7 +22,6 @@
     }
     h1 {
       text-align: center;
-      color: #4CAF50;
     }
     .profile-section {
       margin-bottom: 30px;
@@ -57,11 +56,25 @@
       margin-top: 5px;
       font-size: 1.1em;
     }
-    .footer {
+    .btn-edit {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
       text-align: center;
-      margin-top: 40px;
-      font-size: 0.9em;
-      color: #777;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      background-color: #f8f9fa;
+      padding: 10px 0;
     }
   </style>
 </head>
@@ -80,11 +93,10 @@
     <p><strong>Poids:</strong> <span th:text="*{weight}"></span></p>
     <p><strong>Niveau d'activité physique:</strong> <span th:text="${activityLevel}"></span></p>
     <a href="/profil/edit" class="btn-edit">Modifier mes informations</a>
-
-  <div class="footer">
-    <p>© 2024 Suivi de Régime - Tous droits réservés</p>
   </div>
 </div>
-
+<div class="footer">
+  <p>© 2024 Suivi de Régime - Tous droits réservés</p>
+</div>
 </body>
 </html>
