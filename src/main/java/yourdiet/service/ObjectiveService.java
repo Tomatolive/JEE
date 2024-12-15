@@ -36,6 +36,11 @@ public class ObjectiveService {
         return objectiveRepository.save(objective);
     }
 
+    /**
+     * Calcule les calories et les macronutriments journaliers pour un objectif donné.
+     * @param objective L'objectif à calculer
+     * @return L'objectif mis à jour
+     */
     public Objective calculateObjective(Objective objective) {
         User user = objective.getUser();
         double basalMetabolism = calculateBasalMetabolism(user);
@@ -50,7 +55,7 @@ public class ObjectiveService {
             double weightDifference = targetWeight - currentWeight;
             // Limiter la variation de poids à un maximum sain (0.5kg par semaine)
             double maxWeightChangePerMonth = weightDifference > 0 ? 2.0 : -2.0;
-            weightDifference = Math.max(Math.min(weightDifference, maxWeightChangePerMonth), -maxWeightChangePerMonth);
+            weightDifference = Math.min(Math.max(weightDifference, -maxWeightChangePerMonth), maxWeightChangePerMonth);
 
             // Calculer les calories supplémentaires/déficitaires par jour
             // Pour gagner/perdre weightDifference kg en un mois
@@ -76,6 +81,11 @@ public class ObjectiveService {
         return objective;
     }
 
+    /**
+     * Calcule le métabolisme de base d'un utilisateur en fonction de son poids, taille, âge, sexe et son niveau d'activité physique.
+     * @param user L'utilisateur pour lequel calculer le métabolisme de base
+     * @return Le métabolisme de base en calories
+     */
 	private double calculateBasalMetabolism(User user) {
         if (user.getWeight() == null || user.getHeight() == null || user.getAge() == null) {
             throw new IllegalArgumentException("Données utilisateur incomplètes");
@@ -93,6 +103,11 @@ public class ObjectiveService {
         return bmr * user.getActivityLevel();
     }
 
+    /**
+     * Calcule les macronutriments (protéines, glucides, lipides) en grammes pour un total calorique journalier donné.
+     * @param objective L'objectif correspondant à la répartition des macronutriments
+     * @param dailyCalories Les calories quotidiennes à répartir en macronutriments
+     */
     private void calculateMacronutrients(Objective objective, double dailyCalories) {
         double proteinPercentage;
         double carbsPercentage;
