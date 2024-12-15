@@ -92,7 +92,25 @@ public class DietService {
             agenda.computeIfAbsent(date, k -> new ArrayList<>()).add(foodAgenda.getFoodEntry());
         }
 
-        // Retourner un agenda vide si aucune donnée n'est trouvée
-        return agenda != null ? agenda : new HashMap<>();
+        return agenda;
+    }
+
+    public List<FoodEntry> getFoodEntriesForUser(User user) {
+        return foodEntryRepository.findByUser(user);
+    }
+
+    public void deleteMeal(Long id) {
+        foodEntryRepository.deleteById(id);
+    }
+
+    public FoodEntry updateMeal(Long id, FoodEntry updatedEntry) {
+        FoodEntry existingEntry = foodEntryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Repas non trouvé"));
+        existingEntry.setFoodName(updatedEntry.getFoodName());
+        existingEntry.setCalories(updatedEntry.getCalories());
+        existingEntry.setProteins(updatedEntry.getProteins());
+        existingEntry.setCarbs(updatedEntry.getCarbs());
+        existingEntry.setFats(updatedEntry.getFats());
+        return foodEntryRepository.save(existingEntry);
     }
 }
