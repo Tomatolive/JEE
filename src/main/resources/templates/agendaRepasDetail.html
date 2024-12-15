@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Détail des Repas - <span th:text="${date}">Date</span></title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+
+    .meal-details-container {
+      width: 80%;
+      margin: 30px auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    h1, h2 {
+      font-family: 'Poppins', sans-serif;
+      color: #34495e;
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-top: 20px;
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .meal-details-container ul.meals-list {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+
+    .meal-details-container ul.meals-list li {
+      padding: 8px 12px;
+      margin: 5px 0;
+      background-color: #dff9fb;
+      color: #2c3e50;
+      border-radius: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1rem;
+    }
+
+    .meal-details-container ul.meals-list .no-data {
+      background-color: #f1f3f5;
+      color: #868e96;
+      font-style: italic;
+      border-radius: 10px;
+      padding: 5px 10px;
+      text-align: center;
+    }
+
+    .btn-delete {
+      background-color: #e74c3c;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s;
+    }
+
+    .btn-delete:hover {
+      background-color: #c0392b;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .btn-primary {
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 25px;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      background-color: #f8f9fa;
+      padding: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar.html}"></div>
+
+<div class="meal-details-container">
+  <h1>Détail des repas pour <span th:text="${date}"></span></h1>
+
+  <h2>Petit Déjeuner</h2>
+  <ul class="meals-list">
+    <li th:each="entry : ${meals['BREAKFAST']}">
+      <div>
+        <span th:text="${entry.foodEntry.foodName}"></span>
+        <span> - Calories: <span th:text="${entry.foodEntry.calories}"></span></span>,
+        <span>Protéines: <span th:text="${entry.foodEntry.proteins}"></span>g</span>,
+        <span>Carbs: <span th:text="${entry.foodEntry.carbs}"></span>g</span>,
+        <span>Fats: <span th:text="${entry.foodEntry.fats}"></span>g</span>
+      </div>
+      <form th:action="@{/agenda/supprimer-repas/{id}(id=${entry.id})}" method="post">
+        <button type="submit" class="btn-delete">Supprimer</button>
+      </form>
+    </li>
+    <li th:if="${meals['BREAKFAST'].isEmpty()}" class="no-data">Aucun repas prévu</li>
+  </ul>
+
+  <h2>Déjeuner</h2>
+  <ul class="meals-list">
+    <li th:each="entry : ${meals['LUNCH']}">
+      <div>
+        <span th:text="${entry.foodEntry.foodName}"></span>
+        <span> - Calories: <span th:text="${entry.foodEntry.calories}"></span></span>,
+        <span>Protéines: <span th:text="${entry.foodEntry.proteins}"></span>g</span>,
+        <span>Carbs: <span th:text="${entry.foodEntry.carbs}"></span>g</span>,
+        <span>Fats: <span th:text="${entry.foodEntry.fats}"></span>g</span>
+      </div>
+      <form th:action="@{/agenda/supprimer-repas/{id}(id=${entry.id})}" method="post">
+        <button type="submit" class="btn-delete">Supprimer</button>
+      </form>
+    </li>
+    <li th:if="${meals['LUNCH'].isEmpty()}" class="no-data">Aucun repas prévu</li>
+  </ul>
+
+  <h2>Dîner</h2>
+  <ul class="meals-list">
+    <li th:each="entry : ${meals['DINNER']}">
+      <div>
+        <span th:text="${entry.foodEntry.foodName}"></span>
+        <span> - Calories: <span th:text="${entry.foodEntry.calories}"></span></span>,
+        <span>Protéines: <span th:text="${entry.foodEntry.proteins}"></span>g</span>,
+        <span>Glucides: <span th:text="${entry.foodEntry.carbs}"></span>g</span>,
+        <span>Lipides: <span th:text="${entry.foodEntry.fats}"></span>g</span>
+      </div>
+      <form th:action="@{/agenda/supprimer-repas/{id}(id=${entry.id})}" method="post">
+        <button type="submit" class="btn-delete">Supprimer</button>
+      </form>
+    </li>
+    <li th:if="${meals['DINNER'].isEmpty()}" class="no-data">Aucun repas prévu</li>
+  </ul>
+
+  <h2>Total journalier</h2>
+  <ul class="meals-list">
+    <li>
+      <span>Total Calories: <span th:text="${totalCalories}"></span></span>
+    </li>
+    <li>
+      <span>Total Protéines: <span th:text="${totalProteins}"></span> g</span>
+    </li>
+    <li>
+      <span>Total Glucides: <span th:text="${totalCarbs}"></span> g</span>
+    </li>
+    <li>
+      <span>Total Lipides: <span th:text="${totalFats}"></span> g</span>
+    </li>
+  </ul>
+
+  <div class="btn-container">
+    <a href="/agenda" class="btn-primary">Retour à l'agenda</a>
+  </div>
+</div>
+<div class="footer">
+  <p>© 2024 Suivi de Régime - Tous droits réservés</p>
+</div>
+</body>
+</html>

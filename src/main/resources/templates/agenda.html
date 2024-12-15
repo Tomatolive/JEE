@@ -74,6 +74,7 @@
 
     .agenda-container .table-modern tbody tr:hover {
       background-color: #e9f5ff;
+      cursor: pointer;
     }
 
     .agenda-container ul {
@@ -119,6 +120,22 @@
     .pagination a:hover {
       background-color: #0056b3;
     }
+<<<<<<< HEAD
+
+    .note {
+      background-color: #fff3cd;
+      border-left: 5px solid #ffc107;
+      padding: 15px;
+      margin: 15px 0;
+      font-size: 1rem;
+      color: #856404;
+      border-radius: 5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+=======
+>>>>>>> 1e09dcaefc757a720e7cbf17897d56b31a4175bc
     .footer {
       position: fixed;
       bottom: 0;
@@ -135,6 +152,10 @@
 <div class="agenda-container">
   <h1 class="text-center mb-4">Agenda Hebdomadaire</h1>
 
+  <div class="note">
+    <strong>Info :</strong> Vous pouvez cliquer sur la date de chaque ligne pour voir les détails, ou supprimer un repas.
+  </div>
+
   <div class="btn-container">
     <a href="agenda/ajouter-repas" class="btn btn-primary btn-rounded">Ajouter un repas</a>
   </div>
@@ -150,7 +171,10 @@
     </thead>
     <tbody>
     <tr th:each="entry : ${agenda}">
-      <td th:text="${entry.key}">Date</td>
+      <td>
+        <!-- Lien vers les détails de la journée -->
+        <a th:href="@{'/agenda/detail/' + ${entry.key}}" th:text="${entry.key}">Date</a>
+      </td>
       <td>
         <ul>
           <li th:each="meal : ${entry.value['BREAKFAST']}" th:text="${meal.foodName}"></li>

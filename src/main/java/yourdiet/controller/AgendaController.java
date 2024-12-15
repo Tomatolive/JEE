@@ -1,8 +1,7 @@
 package yourdiet.controller;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import yourdiet.model.FoodAgenda;
 import yourdiet.model.FoodEntry;
 import yourdiet.model.User;
@@ -16,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -148,5 +145,76 @@ public class AgendaController {
 
         return "redirect:/agenda";
     }
+
+    @GetMapping("/detail/{date}")
+    public String showAgendaDetailPage(@PathVariable("date") String date,
+                                       @AuthenticationPrincipal UserDetails userDetails,
+                                       Model model) {
+        // Récupérer l'utilisateur courant
+        User currentUser = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
+        // Convertir la date
+        LocalDate day = LocalDate.parse(date);
+
+        // Récupérer les FoodAgenda pour ce jour
+        List<FoodAgenda> dailyAgenda = dietService.getFoodAgendaEntriesForDay(currentUser, day);
+
+        // Organiser les repas par type
+        Map<String, List<FoodAgenda>> meals = new HashMap<>();
+        meals.put("BREAKFAST", new ArrayList<>());
+        meals.put("LUNCH", new ArrayList<>());
+        meals.put("DINNER", new ArrayList<>());
+
+        // Variables pour les totaux
+        int totalCalories = 0;
+        double totalProteins = 0;
+        double totalCarbs = 0;
+        double totalFats = 0;
+
+        for (FoodAgenda entry : dailyAgenda) {
+            FoodEntry foodEntry = entry.getFoodEntry();
+            meals.get(entry.getMealType().name()).add(entry);
+
+            // Additionner les valeurs nutritionnelles
+            totalCalories += foodEntry.getCalories() != null ? foodEntry.getCalories() : 0;
+            totalProteins += foodEntry.getProteins() != null ? foodEntry.getProteins() : 0;
+            totalCarbs += foodEntry.getCarbs() != null ? foodEntry.getCarbs() : 0;
+            totalFats += foodEntry.getFats() != null ? foodEntry.getFats() : 0;
+        }
+
+        // Ajouter les données au modèle
+        model.addAttribute("date", day);
+        model.addAttribute("meals", meals);
+        model.addAttribute("totalCalories", totalCalories);
+        model.addAttribute("totalProteins", totalProteins);
+        model.addAttribute("totalCarbs", totalCarbs);
+        model.addAttribute("totalFats", totalFats);
+
+        return "agendaRepasDetail";
+    }
+
+
+    @PostMapping("/supprimer-repas/{id}")
+    public String supprimerRepas(@PathVariable("id") Long id,
+                                 @AuthenticationPrincipal UserDetails userDetails) {
+        User currentUser = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
+        FoodAgenda foodAgenda = foodAgendaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Repas non trouvé"));
+
+        // Vérifier que le repas appartient bien à l'utilisateur courant
+        if (!foodAgenda.getUser().equals(currentUser)) {
+            throw new RuntimeException("Vous n'êtes pas autorisé à supprimer ce repas");
+        }
+
+        // Supprimer l'entrée
+        foodAgendaRepository.delete(foodAgenda);
+
+        // Redirection vers la page du jour
+        return "redirect:/agenda/detail/" + foodAgenda.getDateAgenda();
+    }
+
 
 }
