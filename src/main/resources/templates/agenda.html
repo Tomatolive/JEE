@@ -119,6 +119,14 @@
     .pagination a:hover {
       background-color: #0056b3;
     }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      background-color: #f8f9fa;
+      padding: 10px 0;
+    }
   </style>
 </head>
 <body>
@@ -170,6 +178,8 @@
     <a th:href="@{'/agenda?week=' + ${nextWeek}}">Page Suivante</a>
   </div>
 </div>
-
+<div class="footer">
+  <p>© 2024 Suivi de Régime - Tous droits réservés</p>
+</div>
 </body>
 </html>
