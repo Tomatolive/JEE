@@ -53,15 +53,17 @@ public class AgendaController {
      * Affiche la page Agenda.
      */
     @GetMapping
-    public String showAgendaPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String showAgendaPage(Model model,
+                                 @RequestParam(defaultValue = "0") int week,
+                                 @AuthenticationPrincipal UserDetails userDetails) {
         // Récupération de l'utilisateur courant
         User currentUser = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
-        // Calcul des dates de la semaine courante (lundi à dimanche)
+        // Calcul des dates de la semaine en fonction du paramètre 'week'
         LocalDate today = LocalDate.now();
-        LocalDate startOfWeek = today.with(DayOfWeek.MONDAY);
-        LocalDate endOfWeek = today.with(DayOfWeek.SUNDAY);
+        LocalDate startOfWeek = today.plusWeeks(week).with(DayOfWeek.MONDAY);
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
 
         // Récupération de l'agenda
         List<FoodAgenda> weeklyAgenda = dietService.getFoodAgendaEntries(currentUser, startOfWeek, endOfWeek);
@@ -86,11 +88,20 @@ public class AgendaController {
             agenda.get(date).computeIfAbsent(mealType, k -> new ArrayList<>()).add(foodEntry);
         }
 
+        // Calcul des semaines précédente et suivante
+        int prevWeek = week - 1;
+        int nextWeek = week + 1;
+
         // Ajout des données au modèle
         model.addAttribute("agenda", agenda);
-        System.out.println("Agenda : " + agenda);
+        model.addAttribute("weekOffset", week);
+        model.addAttribute("prevWeek", prevWeek);
+        model.addAttribute("nextWeek", nextWeek);
+
         return "agenda";
     }
+
+
 
     @GetMapping("/ajouter-repas")
     public String showAjoutAgendaPage(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {

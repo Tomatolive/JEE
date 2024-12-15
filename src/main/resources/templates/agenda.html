@@ -5,19 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agenda Hebdomadaire</title>
   <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
     .agenda-container {
       font-family: 'Inter', sans-serif;
-      margin: 20px;
+      margin: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 70vh;
     }
 
     .agenda-container .btn-container {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     .agenda-container .btn-primary {
       display: inline-block;
-      padding: 10px 20px;
+      padding: 8px 16px;
       background-color: #007bff;
       color: white;
       text-decoration: none;
@@ -32,8 +41,6 @@
       font-family: 'Poppins', sans-serif;
       font-weight: 700;
       color: #34495e;
-      text-align: center;
-      margin-bottom: 20px;
     }
 
     .agenda-container .table-modern {
@@ -43,6 +50,7 @@
       background: #fff;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       border-spacing: 0;
+      margin-bottom: 20px;
     }
 
     .agenda-container .table-modern th {
@@ -92,13 +100,32 @@
       padding: 5px 10px;
       display: inline-block;
     }
+
+    .pagination {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .pagination a {
+      padding: 8px 12px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      margin: 0 5px;
+    }
+
+    .pagination a:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
 <div th:replace="~{fragments/navbar.html}"></div>
 
 <div class="agenda-container">
-  <h1>Agenda Hebdomadaire</h1>
+  <h1 class="text-center mb-4">Agenda Hebdomadaire</h1>
 
   <div class="btn-container">
     <a href="agenda/ajouter-repas" class="btn btn-primary btn-rounded">Ajouter un repas</a>
@@ -137,6 +164,11 @@
     </tr>
     </tbody>
   </table>
+
+  <div class="pagination">
+    <a th:href="@{'/agenda?week=' + ${prevWeek}}">Page Précédente</a>
+    <a th:href="@{'/agenda?week=' + ${nextWeek}}">Page Suivante</a>
+  </div>
 </div>
 
 </body>
