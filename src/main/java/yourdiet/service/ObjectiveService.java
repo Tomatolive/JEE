@@ -53,11 +53,9 @@ public class ObjectiveService {
     }
 
     /**
-     * Calcule l'objectif nutritionnel d'un utilisateur, en fonction de son métabolisme de base,
-     * de son poids cible, de son poids actuel et de son niveau d'activité.
-     *
-     * @param objective L'objectif nutritionnel à calculer.
-     * @return L'objectif nutritionnel mis à jour avec les valeurs de calories et macronutriments.
+     * Calcule les calories et les macronutriments journaliers pour un objectif donné.
+     * @param objective L'objectif à calculer
+     * @return L'objectif mis à jour
      */
     public Objective calculateObjective(Objective objective) {
         User user = objective.getUser();
@@ -73,7 +71,7 @@ public class ObjectiveService {
             double weightDifference = targetWeight - currentWeight;
             // Limiter la variation de poids à un maximum sain (0.5kg par semaine)
             double maxWeightChangePerMonth = weightDifference > 0 ? 2.0 : -2.0;
-            weightDifference = Math.max(Math.min(weightDifference, maxWeightChangePerMonth), -maxWeightChangePerMonth);
+            weightDifference = Math.min(Math.max(weightDifference, -maxWeightChangePerMonth), maxWeightChangePerMonth);
 
             // Calculer les calories supplémentaires/déficitaires par jour pour atteindre l'objectif de poids
             double additionalCaloriesPerDay = (CALORIES_PER_KG * weightDifference) / DAYS_IN_MONTH;
@@ -99,14 +97,11 @@ public class ObjectiveService {
     }
 
     /**
-     * Calcule le métabolisme de base (BMR) d'un utilisateur à partir de sa taille, son poids,
-     * son âge et son sexe en utilisant la formule de Mifflin-St Jeor.
-     *
-     * @param user L'utilisateur pour lequel calculer le métabolisme de base.
-     * @return La valeur du métabolisme de base ajustée selon le niveau d'activité.
-     * @throws IllegalArgumentException Si des données utilisateur nécessaires sont manquantes.
+     * Calcule le métabolisme de base d'un utilisateur en fonction de son poids, taille, âge, sexe et son niveau d'activité physique.
+     * @param user L'utilisateur pour lequel calculer le métabolisme de base
+     * @return Le métabolisme de base en calories
      */
-    private double calculateBasalMetabolism(User user) {
+	private double calculateBasalMetabolism(User user) {
         if (user.getWeight() == null || user.getHeight() == null || user.getAge() == null) {
             throw new IllegalArgumentException("Données utilisateur incomplètes");
         }
@@ -124,12 +119,9 @@ public class ObjectiveService {
     }
 
     /**
-     * Calcule les macronutriments (protéines, glucides, lipides) en fonction des calories quotidiennes
-     * et du niveau d'activité de l'utilisateur. Les pourcentages des macronutriments varient selon
-     * l'activité physique.
-     *
-     * @param objective L'objectif nutritionnel de l'utilisateur à mettre à jour.
-     * @param dailyCalories Le nombre total de calories quotidiennes.
+     * Calcule les macronutriments (protéines, glucides, lipides) en grammes pour un total calorique journalier donné.
+     * @param objective L'objectif correspondant à la répartition des macronutriments
+     * @param dailyCalories Les calories quotidiennes à répartir en macronutriments
      */
     private void calculateMacronutrients(Objective objective, double dailyCalories) {
         double proteinPercentage;
